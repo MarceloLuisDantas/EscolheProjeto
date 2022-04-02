@@ -9,6 +9,7 @@ const SELECIONADO: i16 = 1;
 mod projeto;
 
 fn main() {
+    // Setup ===========================================
     initscr();                                     // Inicia o terminal
     start_color();                                 // Ativa formatação de cores 
     noecho();                                      // Desativa o echo
@@ -22,24 +23,17 @@ fn main() {
     addstr(" --------- Projetos ----------- \n");
     addstr(" Qual projeto você desejá abrir? \n");
     addstr("\n");
+    // Setup ===========================================
 
-    // // Gera a Struct com os projetos
-    // let mut p = projeto::Projetos{
-    //     inacabados: vec![
-    //         "Orgonize".to_string(),
-    //         "MicroRPG".to_string(),
-    //         "EscolheProjeto".to_string(),
-    //     ],
-    //     feitos: Vec::<String>::new(),
-    // };
-
-    let p: projeto::Projetos = Default::default(); 
+    // Criando a estrutura com os projetos
+    let mut projetos: projeto::Projetos = Default::default(); 
+    projetos.carrega_projetos();
 
     let mut quit = false;
     let mut item_selecioado = 0; // Cursos para destacar o item selecionado
     while !quit {
         // Redenriza os projetos inacamados na tela
-        for (row, item) in p.inacabados.iter().enumerate() {
+        for (row, item) in projetos.inacabados.iter().enumerate() {
             // Verifica es esta selecionado
             let pair = if item_selecioado == row { 
                 SELECIONADO 
@@ -68,7 +62,7 @@ fn main() {
                 item_selecioado -= 1 
             },
             // B por algum motivo tem o mesmo codigo de Arrow Down
-            'B' => if item_selecioado < p.inacabados.len() - 1 { 
+            'B' => if item_selecioado < projetos.inacabados.len() - 1 { 
                 item_selecioado += 1
             }, 
             _ => {},

@@ -1,5 +1,5 @@
-use std::fs::File;
-use std::io::{Write, BufReader, BufRead, Error};
+use std::io::{BufRead, BufReader};
+mod arquivo;
 
 #[derive(Default)]
 pub struct Projetos {
@@ -7,26 +7,16 @@ pub struct Projetos {
     pub feitos: Vec<String>,
 }
 
-// Verifica se os arquivos com os projetos existem
-pub fn verifica_arquivos(path: String) {
-
-}
-// Caso os arquivos não existam eles seram craidos
-pub fn cria_arquivos() {
-
-}
-// Depois de verificar se os arquivos existem
-// esles seram lidos e enviados
-pub fn le_arquivo() -> Vec<String> {
-    let projetos: Vec<String> = Vec::new();
-
-
-
-    return projetos
-}
-
 impl Projetos {
     pub fn carrega_projetos(&mut self) {
-
+        let inacabados = BufReader::new(arquivo::carrega_arquivo("./inacados.txt"));
+        for line in inacabados.lines() {
+            match line {
+                Ok(line) => self.inacabados.push(line),
+                Err(err) => {
+                    panic!("Erro ao tentar ler arquivo | Error {}", err)
+                }
+            }            
+        }
     }
 }
