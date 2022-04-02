@@ -4,10 +4,9 @@ use ncurses::*;
 const DESSELECIONADO: i16 = 0; 
 const SELECIONADO: i16 = 1;
 
-pub struct Projetos {
-    inacabados: Vec<String>,
-    feitos: Vec<String>,
-}
+// Estrutura que guarda os projetos
+#[path = "./estruturas/projeto.rs"]
+mod projeto;
 
 fn main() {
     initscr();                                     // Inicia o terminal
@@ -24,15 +23,17 @@ fn main() {
     addstr(" Qual projeto você desejá abrir? \n");
     addstr("\n");
 
-    // Gera a Struct com os projetos
-    let mut p = Projetos{
-        inacabados: vec![
-            "Orgonize".to_string(),
-            "MicroRPG".to_string(),
-            "EscolheProjeto".to_string(),
-        ],
-        feitos: Vec::<String>::new(),
-    };
+    // // Gera a Struct com os projetos
+    // let mut p = projeto::Projetos{
+    //     inacabados: vec![
+    //         "Orgonize".to_string(),
+    //         "MicroRPG".to_string(),
+    //         "EscolheProjeto".to_string(),
+    //     ],
+    //     feitos: Vec::<String>::new(),
+    // };
+
+    let p: projeto::Projetos = Default::default(); 
 
     let mut quit = false;
     let mut item_selecioado = 0; // Cursos para destacar o item selecionado
