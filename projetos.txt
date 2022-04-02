@@ -1,0 +1,9 @@
+Teste Numero 1 | ./teste1.rs | inacabado
+Teste Numero 2 | ./teste2.rs | finalizado
+Teste Numero 3 | ./teste3.rs | inacabado
+Teste Numero 4 | ./teste4.rs | inacabado
+Teste Numero 5 | ./teste5.rs | finalizado
+Teste Numero 6 | ./teste6.rs | inacabado
+Teste Numero 7 | ./teste7.rs | finalizado
+Teste Numero 8 | ./teste8.rs | finalizado
+Teste Numero 9 | ./teste9.rs | inacabado
