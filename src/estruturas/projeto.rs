@@ -1,22 +1,18 @@
 use std::io::{BufRead, BufReader};
 mod arquivo;
 
-#[derive(Default)]
-pub struct Projetos {
-    pub inacabados: Vec<String>,
-    pub feitos: Vec<String>,
+
+pub fn carrega_projetos(path: &str) -> Vec<(String, bool)> {
+    let mut inacabados = Vec::new();
+    let arquivo = BufReader::new(arquivo::carrega_arquivo(path));
+    for line in arquivo.lines() {
+        match line {
+            Ok(line) => inacabados.push((line, false)),
+            Err(err) => {
+                panic!("Erro ao tentar ler arquivo | Error {}", err)
+            }
+        }            
+    }
+    return inacabados
 }
 
-impl Projetos {
-    pub fn carrega_projetos(&mut self) {
-        let inacabados = BufReader::new(arquivo::carrega_arquivo("./inacados.txt"));
-        for line in inacabados.lines() {
-            match line {
-                Ok(line) => self.inacabados.push(line),
-                Err(err) => {
-                    panic!("Erro ao tentar ler arquivo | Error {}", err)
-                }
-            }            
-        }
-    }
-}
