@@ -9,8 +9,12 @@ pub struct Projeto {
 }
 
 impl Projeto {
+    /// Mostra as informações do projetos
+    /// 
+    /// `[nome] | [caminho] | [estado]`
     pub fn show(&self) {
-        println!("Nome: {} | Path: {} ", self.nome, self.path);
+        println!("Nome: {} | Path: {} | Finalizado: {}", 
+                 self.nome, self.path, self.finalizado());
     }
     fn alterar_estados(&mut self) {
         self.finalizado = !self.finalizado;
@@ -24,6 +28,9 @@ impl Projeto {
     }
 }
 
+/// Estrutra responsavel por armazenar e manipular os projetos e suas informações.
+/// Ao ser iniciada se deve chamar o metodo `carrega_projetos()` para que as informações
+/// dos projetos sejám carregadas do arquivo de save
 #[derive(Default)]
 pub struct Projetos {
     pub inacabados: Vec<Projeto>,
@@ -31,11 +38,13 @@ pub struct Projetos {
 }
 
 impl Projetos {
+    // Cria uma lista unica com todos os projetos
     fn todos_projetos(&self) -> Vec<Projeto> {
         let mut fina = self.finalizado.clone();
         fina.append(&mut self.inacabados.clone());
         return fina
     }
+    // Atualiza o arquivo de save
     fn atualiza_arquivo(&self) {
         let mut linhas = Vec::new();
         for i in self.todos_projetos().iter() {
@@ -44,6 +53,9 @@ impl Projetos {
         }
         arquivo::edita_arquivo("./projetos.txt", linhas);
     }
+
+    /// Primeira função a ser chamada quando se inicia a estrutura, ela ira carregar
+    /// todos os projetos salvos no arquivo de save e ira organizar dentro das listas
     pub fn carrega_projetos(&mut self) {
         let arquivo = BufReader::new(arquivo::carrega_arquivo("./projetos.txt"));
         for line in arquivo.lines() {
@@ -70,7 +82,10 @@ impl Projetos {
             } 
         }
     }
-    pub fn move_projeto(&mut self, projeto_indice: usize, lista_alvo: bool,) {
+
+    /// Função responsavle por fazer a transgerencia de um projeto de uma lista
+    /// para a outra, e logo em seguida fazer a atualização do arquivo de save
+    pub fn move_projeto(&mut self, projeto_indice: usize, lista_alvo: bool) {
         if lista_alvo {
             let mut p = self.finalizado[projeto_indice].clone();
             self.finalizado.remove(projeto_indice);
