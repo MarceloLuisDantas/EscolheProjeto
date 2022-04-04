@@ -1,8 +1,9 @@
 use std::io::{BufRead, BufReader};
 mod arquivo;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, PartialOrd, Ord, Eq)]
 pub struct Projeto {
+    id: u32,
     nome: String,
     path: String,
     finalizado: bool,
@@ -13,11 +14,8 @@ impl Projeto {
     /// 
     /// `[nome] | [caminho] | [estado]`
     pub fn show(&self) {
-        println!("Nome: {} | Path: {} | Finalizado: {}", 
-                 self.nome, self.path, self.finalizado());
-    }
-    fn alterar_estados(&mut self) {
-        self.finalizado = !self.finalizado;
+        println!("Nome: {} | Path: {} | Finalizado: {} | ID: {}", 
+                 self.nome, self.path, self.finalizado(), self.id);
     }
     fn finalizado(&self) -> String {
         if self.finalizado {
@@ -25,6 +23,12 @@ impl Projeto {
         } else {
             "inacamabdo".to_string()
         }
+    }
+    fn alterar_estados(&mut self) {
+        self.finalizado = !self.finalizado;
+    }
+    fn reajusta_id(&mut self) {
+        self.id -= 1 ;
     }
 }
 
@@ -35,23 +39,40 @@ impl Projeto {
 pub struct Projetos {
     pub inacabados: Vec<Projeto>,
     pub finalizado: Vec<Projeto>,
+    len: u32,
 }
 
 impl Projetos {
     // Cria uma lista unica com todos os projetos
-    fn todos_projetos(&self) -> Vec<Projeto> {
+    pub fn todos_projetos(&self) -> Vec<Projeto> {
         let mut fina = self.finalizado.clone();
         fina.append(&mut self.inacabados.clone());
+        fina.sort();
         return fina
     }
+
     // Atualiza o arquivo de save
     fn atualiza_arquivo(&self) {
         let mut linhas = Vec::new();
         for i in self.todos_projetos().iter() {
-            let linha = format!("{} | {} | {}", i.nome, i.path, i.finalizado());
+            let linha = format!("{} | {} | {} | {}", i.id, i.nome, i.path, i.finalizado());
             linhas.push(linha);
         }
         arquivo::edita_arquivo("./projetos.txt", linhas);
+    }
+
+    // reajusta todos os id dos projetos apos remover 
+    fn reajusta_id_pos_remover(&mut self, id_removido: u32) {
+        for i in self.finalizado.iter_mut() {
+            if i.id > id_removido {
+                i.reajusta_id();
+            }
+        }
+        for i in self.inacabados.iter_mut() {
+            if i.id > id_removido {
+                i.reajusta_id();
+            }
+        }
     }
 
     /// Primeira função a ser chamada quando se inicia a estrutura, ela ira carregar
@@ -65,15 +86,19 @@ impl Projetos {
                     for i in line.split("|") {
                         valores.push(i);
                     }             
-                    let p = Projeto {
-                        nome: valores[0].trim().to_string(),
-                        path: valores[1].trim().to_string(),
-                        finalizado: valores[2].trim() == "finalizado",
-                    };
-                    if p.finalizado {
-                        self.finalizado.push(p);
-                    } else {
-                        self.inacabados.push(p);
+                    if valores.len() == 4 {
+                        let p = Projeto {
+                            id: valores[0].trim().parse::<u32>().unwrap(),
+                            nome: valores[1].trim().to_string(),
+                            path: valores[2].trim().to_string(),
+                            finalizado: valores[3].trim() == "finalizado",
+                        };
+                        if p.finalizado {
+                            self.finalizado.push(p);
+                        } else {
+                            self.inacabados.push(p);
+                        }
+                        self.len += 1;
                     }
                 },
                 Err(err) => {
@@ -81,6 +106,46 @@ impl Projetos {
                 }
             } 
         }
+    }
+
+    /// Função que cria e adiciona um novo projeto e atualiza o arquivo
+    pub fn adiciona_projeto(&mut self, nome: &str, path: &str, fina: bool) {
+        let new_projeto = Projeto {
+            id: self.len + 1,
+            nome: nome.to_string(),
+            path: path.to_string(),
+            finalizado: fina,
+        };
+        if new_projeto.finalizado {
+            self.finalizado.push(new_projeto);
+        } else {
+            self.inacabados.push(new_projeto);
+        }
+        self.atualiza_arquivo();
+        self.len += 1;
+    }
+
+    pub fn remove_projeto(&mut self, id: u32) {
+        let mut indice: i32 = -1;
+        for (i, p) in self.finalizado.iter().enumerate() {
+            if p.id == id {
+                indice = i as i32;
+                break
+            }
+        }
+        if indice == -1 {
+            for (i, p) in self.inacabados.iter().enumerate() {
+                if p.id == id {
+                    indice = i as i32;
+                    break;
+                }
+            }   
+            self.inacabados.remove(indice as usize);
+        } else {
+            self.finalizado.remove(indice as usize);
+        }
+        self.reajusta_id_pos_remover(id);
+        self.atualiza_arquivo();
     }
 
     /// Função responsavle por fazer a transgerencia de um projeto de uma lista
