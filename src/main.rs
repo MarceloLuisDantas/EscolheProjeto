@@ -16,7 +16,7 @@ fn main() {
     p.adiciona_projeto("Teste Numero 10", "./teste10", true);
     p.adiciona_projeto("Teste Numero 11", "./teste11", true);
     p.adiciona_projeto("Teste Numero 12", "./teste12", true);
-    p.remove_projeto(7);
+    p.remove_projetos(vec![3, 7, 11]);
     
     println!("Depois ----------------- ");
     for i in p.todos_projetos().iter() {

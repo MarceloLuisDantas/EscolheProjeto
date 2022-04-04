@@ -62,15 +62,17 @@ impl Projetos {
     }
 
     // reajusta todos os id dos projetos apos remover 
-    fn reajusta_id_pos_remover(&mut self, id_removido: u32) {
-        for i in self.finalizado.iter_mut() {
-            if i.id > id_removido {
-                i.reajusta_id();
+    fn reajusta_id_pos_remover(&mut self, ids_removidos: Vec<u32>) {
+        for id_removido in ids_removidos {
+            for i in self.finalizado.iter_mut() {
+                if i.id >= id_removido {
+                    i.reajusta_id();
+                }
             }
-        }
-        for i in self.inacabados.iter_mut() {
-            if i.id > id_removido {
-                i.reajusta_id();
+            for i in self.inacabados.iter_mut() {
+                if i.id >= id_removido {
+                    i.reajusta_id();
+                }
             }
         }
     }
@@ -125,26 +127,28 @@ impl Projetos {
         self.len += 1;
     }
 
-    pub fn remove_projeto(&mut self, id: u32) {
-        let mut indice: i32 = -1;
-        for (i, p) in self.finalizado.iter().enumerate() {
-            if p.id == id {
-                indice = i as i32;
-                break
+    pub fn remove_projetos(&mut self, ids: Vec<u32>) {
+        for id in ids.iter() {
+            let mut indice: i32 = -1;
+            for (i, p) in self.finalizado.iter().enumerate() {
+                if p.id == *id {
+                    indice = i as i32;
+                    break
+                }
+            }
+            if indice == -1 {
+                for (i, p) in self.inacabados.iter().enumerate() {
+                    if p.id == *id {
+                        indice = i as i32;
+                        break;
+                    }
+                }   
+                self.inacabados.remove(indice as usize);
+            } else {
+                self.finalizado.remove(indice as usize);
             }
         }
-        if indice == -1 {
-            for (i, p) in self.inacabados.iter().enumerate() {
-                if p.id == id {
-                    indice = i as i32;
-                    break;
-                }
-            }   
-            self.inacabados.remove(indice as usize);
-        } else {
-            self.finalizado.remove(indice as usize);
-        }
-        self.reajusta_id_pos_remover(id);
+        self.reajusta_id_pos_remover(ids);
         self.atualiza_arquivo();
     }
 
