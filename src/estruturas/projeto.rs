@@ -21,7 +21,7 @@ impl Projeto {
         if self.finalizado {
             "finalizado".to_string()
         } else {
-            "inacamabdo".to_string()
+            "inacabados".to_string()
         }
     }
     fn alterar_estados(&mut self) {
@@ -95,7 +95,7 @@ impl Projetos {
         });
     }
     
-    pub fn show_inacanabdos(&self) {
+    pub fn show_inacabados(&self) {
         println!("Inacabados -------");
         self.projetos.iter().for_each( |p| {
             if !p.finalizado { p.show() }
@@ -105,10 +105,9 @@ impl Projetos {
     pub fn show_projetos(&self) {
         self.show_finalizados();
         println!();
-        self.show_inacanabdos();
+        self.show_inacabados();
     }
 
-    /// Função que cria e adiciona um novo projeto e atualiza o arquivo
     pub fn adiciona_projeto(&mut self, nome: &str, path: &str, fina: bool) {
         let new_projeto = Projeto {
             id: (self.len() + 1) as u32,
