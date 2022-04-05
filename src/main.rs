@@ -3,25 +3,32 @@
 #[path="./estruturas/projeto.rs"]
 mod projeto;
 
+use std::io;
+
+fn input() -> u32 {
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    input.trim().parse::<u32>().unwrap()
+}
+
 fn main() {
     let mut p: projeto::Projetos = Default::default() ;
     p.carrega_projetos();
 
-    println!("Antes ----------------- ");
-    for i in p.todos_projetos().iter() {
-        i.show();
-    }
-    println!();
-
-    p.adiciona_projeto("Teste Numero 10", "./teste10", true);
-    p.adiciona_projeto("Teste Numero 11", "./teste11", true);
-    p.adiciona_projeto("Teste Numero 12", "./teste12", true);
-    p.remove_projetos(vec![3, 7, 11]);
     
-    println!("Depois ----------------- ");
-    for i in p.todos_projetos().iter() {
-        i.show();
-    }
+    // p.adiciona_projeto("Teste Numero 11", "./teste11", true);
+    // p.adiciona_projeto("Teste Numero 12", "./teste12", true);
+    // p.remove_projetos(vec![1, 4, 7]);
+    
+    println!();
+    p.show_projetos();
+    
+    println!("Qual projeto deseja finalizar [ID]: ");
+    p.altera_estado_projeto(input());
+
+    println!();
+    p.show_projetos();
+    
 
     // println!("Projetos inacabados: ");
     // for (indice, projeto) in p.inacabados.iter().enumerate() {
