@@ -1,9 +1,9 @@
-1 | Teste Numero 1 | ./teste1 | finalizado
-2 | Teste Numero 2 | ./teste2 | finalizado
-3 | Teste Numero 3 | ./teste3 | inacabados
-4 | Teste Numero 4 | ./teste4 | finalizado
-5 | Teste Numero 5 | ./teste5 | inacabados
-6 | Teste Numero 6 | ./teste6 | finalizado
-7 | Teste Numero 7 | ./teste7 | inacabados
-8 | Teste Numero 8 | ./teste8 | finalizado
-9 | Teste Numero 9 | ./teste9 | inacabados
+1 | Pasta 1 | ~/codigos/teste1 | inacabados
+1 | Pasta 2 | ~/codigos/teste2 | finalizado
+1 | Pasta 3 | ~/codigos/teste3 | inacabados
+1 | Pasta 4 | ~/codigos/teste3 | finalizado
+1 | Pasta 5 | ~/codigos/teste3 | inacabados
+1 | Pasta 6 | ~/codigos/teste3 | finalizado
+1 | Pasta 7 | ~/codigos/teste3 | inacabados
+1 | Pasta 8 | ~/codigos/teste3 | inacabados
+1 | Pasta 9 | ~/codigos/teste3 | finalizado
